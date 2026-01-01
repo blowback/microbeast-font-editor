@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2026, Ant Skelton
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 import { useState, useMemo } from 'react';
 import Handlebars from 'handlebars';
 import presets from '../presets.json';

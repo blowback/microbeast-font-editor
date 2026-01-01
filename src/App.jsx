@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2026, Ant Skelton
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 import { useState, useCallback } from 'react';
 import Toolbar from './components/Toolbar';
 import FontGrid from './components/FontGrid';

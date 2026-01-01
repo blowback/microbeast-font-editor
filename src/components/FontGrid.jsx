@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2026, Ant Skelton
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 import React, { useState, useRef } from 'react';
 import SegmentDisplay from './SegmentDisplay';
 

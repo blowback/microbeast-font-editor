@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2026, Ant Skelton
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
