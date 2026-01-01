@@ -1,0 +1,25 @@
+{
+  "presets": [
+    {
+      "id": "symbols",
+      "name": "Symbols (defined only)",
+      "description": "One EQU per defined character",
+      "extension": "asm",
+      "template": "{{#each characters}}{{#if defined}}{{name}}\tEQU\t%{{bin segments}}\t; #{{hex segments}}\n{{/if}}{{/each}}"
+    },
+    {
+      "id": "table",
+      "name": "Table (all 256)",
+      "description": "DEFW for every slot, including empty",
+      "extension": "asm",
+      "template": "; Font: {{name}}\n{{#each characters}}\tDEFW\t#{{hex segments}}\t; {{index}} {{#if name}}({{name}}){{/if}}\n{{/each}}"
+    },
+    {
+      "id": "c_header",
+      "name": "C Header",
+      "description": "C header file with array",
+      "extension": "h",
+      "template": "#ifndef FONT_{{nameUpper}}_H\n#define FONT_{{nameUpper}}_H\n\n#include <stdint.h>\n\n// Font: {{name}}\nstatic const uint16_t font_{{nameLower}}[256] = {\n{{#each characters}}    0x{{hex segments}},  // {{index}}: {{#if defined}}{{name}}{{else}}(empty){{/if}}\n{{/each}} };\n\n#endif // FONT_{{nameUpper}}_H\n"
+    }
+  ]
+}
