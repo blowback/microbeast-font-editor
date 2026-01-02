@@ -15,11 +15,25 @@
       "template": "; Font: {{name}}\n{{#each characters}}\tDEFW\t#{{hex segments}}\t; {{index}} {{#if name}}({{name}}){{/if}}\n{{/each}}"
     },
     {
+      "id": "table_compact",
+      "name": "Table (compact)",
+      "description": "DEFW up to last defined character only",
+      "extension": "asm",
+      "template": "; Font: {{name}} ({{definedCount}} chars, size={{lastDefinedIndex}})\n{{#each characters}}{{#if (lte index ../lastDefinedIndex)}}\tDEFW\t#{{hex segments}}\t; {{index}} {{#if name}}({{name}}){{/if}}\n{{/if}}{{/each}}"
+    },
+    {
       "id": "c_header",
-      "name": "C Header",
-      "description": "C header file with array",
+      "name": "C Header (all 256)",
+      "description": "C header file with full 256-element array",
       "extension": "h",
       "template": "#ifndef FONT_{{nameUpper}}_H\n#define FONT_{{nameUpper}}_H\n\n#include <stdint.h>\n\n// Font: {{name}}\nstatic const uint16_t font_{{nameLower}}[256] = {\n{{#each characters}}    0x{{hex segments}},  // {{index}}: {{#if defined}}{{name}}{{else}}(empty){{/if}}\n{{/each}} };\n\n#endif // FONT_{{nameUpper}}_H\n"
+    },
+    {
+      "id": "c_header_compact",
+      "name": "C Header (compact)",
+      "description": "C header file up to last defined character",
+      "extension": "h",
+      "template": "#ifndef FONT_{{nameUpper}}_H\n#define FONT_{{nameUpper}}_H\n\n#include <stdint.h>\n\n// Font: {{name}} ({{definedCount}} chars)\n#define FONT_{{nameUpper}}_SIZE {{lastDefinedIndex}}\n\nstatic const uint16_t font_{{nameLower}}[{{lastDefinedIndex}}] = {\n{{#each characters}}{{#if (lte index ../lastDefinedIndex)}}    0x{{hex segments}},  // {{index}}: {{#if defined}}{{name}}{{else}}(empty){{/if}}\n{{/if}}{{/each}} };\n\n#endif // FONT_{{nameUpper}}_H\n"
     }
   ]
 }

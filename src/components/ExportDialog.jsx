@@ -17,6 +17,13 @@ Handlebars.registerHelper('hex', (value) => {
   return num.toString(16).toUpperCase().padStart(4, '0');
 });
 
+// Comparison helpers
+Handlebars.registerHelper('lte', (a, b) => a <= b);
+Handlebars.registerHelper('gte', (a, b) => a >= b);
+Handlebars.registerHelper('lt', (a, b) => a < b);
+Handlebars.registerHelper('gt', (a, b) => a > b);
+Handlebars.registerHelper('eq', (a, b) => a === b);
+
 export default function ExportDialog({ font, onClose }) {
   const [selectedPreset, setSelectedPreset] = useState(presets.presets[0].id);
   const [customTemplate, setCustomTemplate] = useState('');
@@ -35,10 +42,23 @@ export default function ExportDialog({ font, onClose }) {
   // Prepare context for Handlebars
   const context = useMemo(() => {
     const safeName = font.name.replace(/[^a-z0-9]/gi, '_');
+
+    // Find last defined index and count
+    let lastDefinedIndex = -1;
+    let definedCount = 0;
+    font.characters.forEach((char, index) => {
+      if (char !== null) {
+        lastDefinedIndex = index;
+        definedCount++;
+      }
+    });
+
     return {
       name: font.name,
       nameUpper: safeName.toUpperCase(),
       nameLower: safeName.toLowerCase(),
+      lastDefinedIndex,
+      definedCount,
       characters: font.characters.map((char, index) => ({
         index,
         defined: char !== null,
@@ -133,7 +153,10 @@ export default function ExportDialog({ font, onClose }) {
               placeholder="Enter Handlebars template..."
             />
             <p className="text-xs text-gray-500 mt-1">
-              Available: {'{{name}}'}, {'{{nameUpper}}'}, {'{{nameLower}}'}, {'{{#each characters}}'}, {'{{bin segments}}'}, {'{{hex segments}}'}, {'{{index}}'}, {'{{defined}}'}, {'{{/each}}'}
+              Variables: {'{{name}}'}, {'{{lastDefinedIndex}}'}, {'{{definedCount}}'}, {'{{#each characters}}'}, {'{{index}}'}, {'{{defined}}'}, {'{{segments}}'}, {'{{/each}}'}
+            </p>
+            <p className="text-xs text-gray-500">
+              Helpers: {'{{bin segments}}'}, {'{{hex segments}}'}, {'{{#if (lte index ../lastDefinedIndex)}}'}
             </p>
             {useCustom && (
               <div className="mt-2 flex items-center gap-2">

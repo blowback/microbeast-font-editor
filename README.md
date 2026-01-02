@@ -90,7 +90,9 @@ Click **Export** to open the export dialog. Choose from built-in presets or crea
 |--------|-------------|-----------|
 | Symbols (defined only) | Assembly EQU for each defined character | .asm |
 | Table (all 256) | Assembly DEFW for every slot | .asm |
-| C Header | C header with uint16_t array | .h |
+| Table (compact) | Assembly DEFW up to last defined character | .asm |
+| C Header (all 256) | C header with full 256-element array | .h |
+| C Header (compact) | C header up to last defined character | .h |
 
 ### Writing Custom Templates
 
@@ -103,6 +105,8 @@ Templates use [Handlebars](https://handlebarsjs.com/) syntax. Select "Custom tem
 | `{{name}}` | Font name as entered |
 | `{{nameUpper}}` | Font name in UPPER_SNAKE_CASE |
 | `{{nameLower}}` | Font name in lower_snake_case |
+| `{{lastDefinedIndex}}` | Index of the last non-empty character slot |
+| `{{definedCount}}` | Total number of defined characters |
 | `{{#each characters}}` | Loop over all 256 character slots |
 
 #### Inside the `{{#each characters}}` Loop
@@ -113,8 +117,25 @@ Templates use [Handlebars](https://handlebarsjs.com/) syntax. Select "Custom tem
 | `{{defined}}` | Boolean: true if character exists |
 | `{{segments}}` | Raw segment bitmask (0-32767) |
 | `{{name}}` | Character name or auto-generated `CHAR_XX` |
+
+#### Formatting Helpers
+
+| Helper | Description |
+|--------|-------------|
 | `{{bin segments}}` | Segments as 15-digit binary (e.g., `000000001111111`) |
 | `{{hex segments}}` | Segments as 4-digit hex (e.g., `007F`) |
+
+#### Comparison Helpers
+
+Use these with `{{#if}}` to compare values:
+
+| Helper | Description |
+|--------|-------------|
+| `{{#if (lte index ../lastDefinedIndex)}}` | Less than or equal |
+| `{{#if (lt index 128)}}` | Less than |
+| `{{#if (gte index 32)}}` | Greater than or equal |
+| `{{#if (gt index 0)}}` | Greater than |
+| `{{#if (eq index 65)}}` | Equal |
 
 #### Conditionals
 
@@ -147,6 +168,19 @@ const uint16_t font_{{nameLower}}[] = {
     0x{{hex segments}},  // {{index}}{{#if defined}}: {{name}}{{/if}}
 {{/each}}
 };
+```
+
+#### Example: Compact Table (no trailing blanks)
+
+Use `lastDefinedIndex` to omit trailing empty slots and save memory:
+
+```handlebars
+; Font: {{name}} ({{definedCount}} characters, table size: {{lastDefinedIndex}})
+{{#each characters}}
+{{#if (lte index ../lastDefinedIndex)}}
+    DEFW #{{hex segments}}  ; {{index}}
+{{/if}}
+{{/each}}
 ```
 
 #### Example: JSON Export
