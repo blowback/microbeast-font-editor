@@ -165,15 +165,15 @@ The 14-segment display uses the following bit mapping (bit 0 = LSB):
 
 ```
      ──0──   ──1──
-    |\    |    /|
+    |\    |     /|
     7  9  8  10  2
-    |    \|/    |
+    |    \|/     |
      ──6──   ──11─
-    |    /|\    |
+    |    /|\     |
     5. 13 12 14  3
-    |/    |    \|
+    |/    |     \|
      ──4──   ──3──
-           ·15
+                   [] 15
 ```
 
 Bit 15 is the decimal point (bottom right).
