@@ -13,6 +13,13 @@ npm run dev
 
 Open <http://localhost:5173> in your browser.
 
+### Deployment
+
+This project includes a GitHub Actions workflow that automatically deploys to GitHub Pages when you push to the `main` or `master` branch. To enable it:
+
+1. Go to your repository's Settings > Pages
+2. Under "Build and deployment", select "GitHub Actions" as the source
+
 ## Using the Editor
 
 ### The Character Grid
