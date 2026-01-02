@@ -57,7 +57,8 @@ export default function SegmentDisplay({ value = 0, onSegmentClick, size = 200, 
   const segmentStyle = (segment) => ({
     fill: getSegmentColor(segment),
     cursor: interactive ? 'pointer' : 'default',
-    transition: 'fill 0.1s ease',
+    transition: 'fill 0.1s ease, filter 0.1s ease',
+    filter: isLit(segment) ? 'url(#glow)' : 'none',
   });
 
   // Segment path definitions
@@ -132,6 +133,15 @@ export default function SegmentDisplay({ value = 0, onSegmentClick, size = 200, 
 
   return (
     <svg width={width + dpSize * 2} height={height} className="select-none">
+      <defs>
+        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
       <rect x="0" y="0" width={width + dpSize * 2} height={height} fill="#1a1a1a" rx="4" />
 
       {/* Main segments */}
