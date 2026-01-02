@@ -1,6 +1,6 @@
 # MicroBeast Font Editor
 
-A browser-based editor for creating 14-segment LED display fonts. Design characters by toggling individual segments, organize them in a 256-slot grid, and export to various formats for use in embedded systems.
+A browser-based editor for creating 14-segment LED display fonts for the [FeerSum Beasts MicroBeast Z80 Computer](https://feersumbeasts.com/microbeast.html). Design characters by toggling individual segments, organize them in a 256-slot grid, and export to various formats for use in embedded systems.
 
 ![Font Editor Screenshot](images/screenshot.png)
 
