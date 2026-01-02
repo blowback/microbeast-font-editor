@@ -2,6 +2,8 @@
 
 A browser-based editor for creating 14-segment LED display fonts. Design characters by toggling individual segments, organize them in a 256-slot grid, and export to various formats for use in embedded systems.
 
+![Font Editor Screenshot](images/screenshot.png)
+
 ## Getting Started
 
 ```bash
@@ -9,7 +11,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173 in your browser.
+Open <http://localhost:5173> in your browser.
 
 ## Using the Editor
 
@@ -45,6 +47,7 @@ If you click away from a character that has no segments and no name, it automati
 ### Moving and Copying Characters
 
 **Drag and drop** to move characters:
+
 - Drag a single character to relocate it
 - Select multiple characters, then drag any selected one to move them all
 - Selected characters maintain their relative positions
@@ -57,6 +60,7 @@ If you click away from a character that has no segments and no name, it automati
 |----------|--------|
 | Arrow keys | Navigate the grid |
 | Shift+Arrow | Extend selection in that direction |
+| Ctrl/Cmd+A | Select all defined characters |
 | Ctrl/Cmd+C | Copy selected characters |
 | Ctrl/Cmd+V | Paste at anchor position |
 | Delete / Backspace | Reset selected characters (clear all segments) |
@@ -70,6 +74,8 @@ If you click away from a character that has no segments and no name, it automati
 ## Exporting Fonts
 
 Click **Export** to open the export dialog. Choose from built-in presets or create a custom template.
+
+![Export Dialog Screenshot](images/export.png)
 
 ### Built-in Presets
 
@@ -119,7 +125,7 @@ Templates use [Handlebars](https://handlebarsjs.com/) syntax. Select "Custom tem
 ; Font: {{name}}
 {{#each characters}}
 {{#if defined}}
-{{name}}	EQU	%{{bin segments}}	; 0x{{hex segments}}
+{{name}} EQU %{{bin segments}} ; 0x{{hex segments}}
 {{/if}}
 {{/each}}
 ```

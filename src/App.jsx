@@ -355,8 +355,25 @@ function App() {
 
   // Keyboard handler for grid
   const handleKeyDown = useCallback((e) => {
+    // Select all: Ctrl+A / Cmd+A
+    if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
+      e.preventDefault();
+      const allIndices = new Set();
+      for (let i = 0; i < 256; i++) {
+        if (font.characters[i] !== null) {
+          allIndices.add(i);
+        }
+      }
+      if (allIndices.size > 0) {
+        setSelection((prev) => ({
+          anchor: prev.anchor,
+          focus: prev.focus,
+          selected: allIndices,
+        }));
+      }
+    }
     // Copy: Ctrl+C / Cmd+C
-    if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
+    else if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
       e.preventDefault();
       handleCopySelection();
     }
@@ -395,7 +412,7 @@ function App() {
         handleSelect(next, { shift: e.shiftKey });
       }
     }
-  }, [handleCopySelection, handlePaste, handleResetSelection, selection.focus, handleSelect]);
+  }, [font.characters, handleCopySelection, handlePaste, handleResetSelection, selection.focus, handleSelect]);
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">
