@@ -31,6 +31,7 @@ function App() {
   const [font, setFont] = useState(() => createEmptyFont());
   const [selection, setSelection] = useState({
     anchor: 0,
+    focus: 0,
     selected: new Set([0]),
   });
   const [showExportDialog, setShowExportDialog] = useState(false);
@@ -47,7 +48,7 @@ function App() {
   const handleNewFont = useCallback(() => {
     if (confirm('Create a new font? All unsaved changes will be lost.')) {
       setFont(createEmptyFont());
-      setSelection({ anchor: 0, selected: new Set([0]) });
+      setSelection({ anchor: 0, focus: 0, selected: new Set([0]) });
     }
   }, []);
 
@@ -73,7 +74,7 @@ function App() {
       name: data.name || 'Loaded Font',
       characters,
     });
-    setSelection({ anchor: 0, selected: new Set([0]) });
+    setSelection({ anchor: 0, focus: 0, selected: new Set([0]) });
   }, []);
 
   // Save font as JSON
@@ -125,6 +126,7 @@ function App() {
         // Shift+click: select range from anchor to clicked index
         return {
           anchor: prev.anchor,
+          focus: index,
           selected: createSelectionRange(prev.anchor, index),
         };
       } else if (ctrl) {
@@ -135,18 +137,20 @@ function App() {
           // If we removed the anchor, pick a new anchor from remaining selection
           if (index === prev.anchor) {
             const remaining = Array.from(newSelected);
+            const newAnchor = remaining.length > 0 ? remaining[0] : index;
             return {
-              anchor: remaining.length > 0 ? remaining[0] : index,
+              anchor: newAnchor,
+              focus: newAnchor,
               selected: remaining.length > 0 ? newSelected : new Set([index]),
             };
           }
         } else {
           newSelected.add(index);
         }
-        return { anchor: index, selected: newSelected };
+        return { anchor: index, focus: index, selected: newSelected };
       } else {
         // Regular click: single selection
-        return { anchor: index, selected: new Set([index]) };
+        return { anchor: index, focus: index, selected: new Set([index]) };
       }
     });
   }, [selection.selected]);
@@ -227,10 +231,12 @@ function App() {
 
     // Update selection to new positions
     const newSelected = new Set(moves.map((m) => m.dst));
-    const newAnchor = selection.anchor + offset;
+    const newAnchor = Math.max(0, Math.min(255, selection.anchor + offset));
+    const newFocus = Math.max(0, Math.min(255, selection.focus + offset));
 
     setSelection({
-      anchor: Math.max(0, Math.min(255, newAnchor)),
+      anchor: newAnchor,
+      focus: newFocus,
       selected: newSelected,
     });
   }, [selection]);
@@ -277,10 +283,12 @@ function App() {
 
     // Update selection to the copied characters
     const newSelected = new Set(copies.map((c) => c.dst));
-    const newAnchor = selection.anchor + offset;
+    const newAnchor = Math.max(0, Math.min(255, selection.anchor + offset));
+    const newFocus = Math.max(0, Math.min(255, selection.focus + offset));
 
     setSelection({
-      anchor: Math.max(0, Math.min(255, newAnchor)),
+      anchor: newAnchor,
+      focus: newFocus,
       selected: newSelected,
     });
   }, [selection]);
@@ -327,6 +335,7 @@ function App() {
     const newSelected = new Set(pastes.map((p) => p.dst));
     setSelection({
       anchor: selection.anchor,
+      focus: selection.anchor,
       selected: newSelected,
     });
   }, [clipboard, selection.anchor]);
@@ -364,7 +373,7 @@ function App() {
     // Arrow key navigation
     else if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
       e.preventDefault();
-      const current = selection.anchor;
+      const current = selection.focus;
       let next = current;
 
       switch (e.key) {
@@ -386,7 +395,7 @@ function App() {
         handleSelect(next, { shift: e.shiftKey });
       }
     }
-  }, [handleCopySelection, handlePaste, handleResetSelection, selection.anchor, handleSelect]);
+  }, [handleCopySelection, handlePaste, handleResetSelection, selection.focus, handleSelect]);
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">

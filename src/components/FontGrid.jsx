@@ -98,7 +98,7 @@ export default function FontGrid({
     >
       {/* Grid with headers */}
       <div
-        className="grid gap-1"
+        className="grid gap-x-1 gap-y-5"
         style={{ gridTemplateColumns: 'auto repeat(16, 1fr)' }}
       >
         {/* Top-left corner (empty) */}
@@ -162,7 +162,7 @@ export default function FontGrid({
                       interactive={false}
                     />
                     {isDefined && char.name && (
-                      <div className="absolute -bottom-1 left-0 right-0 text-center text-xs text-gray-400 truncate px-0.5">
+                      <div className="absolute -bottom-4 left-0 right-0 text-center text-xs text-yellow-300 truncate px-0.5">
                         {char.name}
                       </div>
                     )}
