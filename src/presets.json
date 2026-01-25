@@ -40,7 +40,7 @@
             "name": "ASM symbols and definitions",
             "description": "EQUs and DEFWs for each character",
             "extension": "asm",
-            "template": "{{#each characters}} {{#if defined}} {{name}}    EQU    {{index}} {{/if}} {{/each}} {{#each characters}} {{#if defined}} {{name}}_d    DEFW    %{{bin segments}}    ; #{{hex segments}} {{/if}} {{/each}}"
+            "template": "{{#each characters}} {{#if defined}} {{name}}\tEQU\t{{index}}\n{{/if}} {{/each}} {{#each characters}} {{#if defined}} {{name}}_d\tDEFW\t%{{bin segments}}\t; #{{hex segments}}\n {{/if}} {{/each}}"
         }
     ]
 }
